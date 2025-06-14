@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Smar_1 Cookie Clicker</title>
+  <style>
+    body {
+      text-align: center;
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: #fff;
+      margin-top: 50px;
+    }
+    #clickBtn, #upgradeBtn, #autoClickerBtn, #upgradeBtn1 ,#reburthBtn ,#home {
+      font-family: 'Courier New', Courier, monospace;
+      background: #222;
+      font-size: 1.5rem;
+      padding: 15px 30px;
+      margin: 15px;
+      cursor: pointer;
+      border: none;
+      border-radius: 60px;
+    }
+    #clickBtn {
+      background: #00aaff;
+      color: white;
+    }
+    #upgradeBtn {
+      background: #ffaa00;
+      color: white;
+    }
+    #upgradeBtn1 {
+      background: #ff0000;
+      color: white;
+    }
+    #autoClickerBtn {
+      background: #33cc33;
+      color: white;
+    }
+    #reburthBtn {
+      background: #ff00ff;
+      color: white;
+    }
+    #home {
+      background: #3700ff;
+      color: white;
+    }
+    p {
+      font-size: 1.2rem;
+      color: #fff;
+
+    }
+    a {
+      color: #00aaff;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+  
+</head>
+<body>
+  <h1>smar_1 Cookie Clicker</h1>
+  <p>Score: <span id="score">0</span></p>
+  <p>Auto-Clickers: <span id="autoCount">0</span></p>
+  <p>reberth:<span id="reberth">0</span></p>
+
+  <button id="clickBtn">Click Me!</button><br>
+  <button id="upgradeBtn">Upgrade (+1 per click) – Cost: <span id="upgradeCostSpan">10</span> </button><br>
+  <button id="upgradeBtn1">Upgrade (+2 per click) – Cost: <span id="upgradeCost1Span">20</span></button><br>
+  <button id="autoClickerBtn">Buy Auto-Clicker (+1/sec) – Cost: <span id="autoClickerCostSpan">25</span></button>
+  <button id="reburthBtn">Buy reberth (x2) – Cost: <span id="reberthCostSpan">10000</span></button>
+  <button id="home">Home</button>
+
+  <script>
+    let score = 0;
+    let increment = 1;
+    let autoClickers = 0;
+    let reberth = 0;
+    let autoClickerCost = 25;
+    let reberthCost = 100;
+    let upgradeCost = 10;
+    let upgradeCost1 = 20;
+    let upgradebutton1 = 0;
+    let upgradebutton2 = 0;
+
+    const scoreDisplay = document.getElementById('score');
+    const autoDisplay = document.getElementById('autoCount');
+    const clickBtn = document.getElementById('clickBtn');
+    const upgradeBtn = document.getElementById('upgradeBtn');
+    const upgradeBtn1 = document.getElementById('upgradeBtn1');
+    const autoClickerBtn = document.getElementById('autoClickerBtn');
+    const reberthBtn = document.getElementById('reburthBtn');
+    const upgradeCostSpan = document.getElementById('upgradeCostSpan');
+    const upgradeCost1Span = document.getElementById('upgradeCost1Span');
+    const autoClickerCostSpan = document.getElementById('autoClickerCostSpan');
+    const reberthCostSpan = document.getElementById('reberthCostSpan');
+
+    clickBtn.onclick = () => {
+      score += increment;
+      updateDisplay();
+    };
+
+    upgradeBtn.onclick = () => {
+      if (score >= upgradeCost) {
+        score -= upgradeCost;
+        increment += 1;
+        upgradebutton1 += 1;
+        upgradeCost += 10; // Example: increase cost each time
+        updateDisplay();
+      } else {
+        alert("Not enough points for upgrade!");
+      }
+    };
+    upgradeBtn1.onclick = () => {
+      if (score >= upgradeCost1 ) {
+        score -= upgradeCost1;
+        increment += 2;
+        upgradebutton2 += 1;
+        upgradeCost1 += 20;
+        updateDisplay();
+      } else {
+        alert("Not enough points for upgrade!");
+      }
+    };
+
+    autoClickerBtn.onclick = () => {
+      if (score >= autoClickerCost) {
+        score -= autoClickerCost;
+        autoClickers += 1;
+        autoClickerCost += 25; // Example: increase cost each time
+        updateDisplay();
+      } else {
+        alert("Not enough points for auto-clicker!");
+      }
+    };
+    reberthBtn.onclick = () => {
+      if (score >= reberthCost) {
+        score -= reberthCost;
+        increment *= 2;
+        autoClickers *= 2;
+        reberth += 1;
+        reberthCost *= 2; // Example: double cost each time
+        updateDisplay();
+      } else {
+        alert("Not enough points for reberth!");
+      }
+    };
+    home.onclick = () => {
+      window.location.href = "home.html";
+    };
+    // Auto-click every second
+    setInterval(() => {
+      score += autoClickers;
+      updateDisplay();
+    }, 1000);
+   
+
+    // Load saved progress
+window.onload = function() {
+  const saved = JSON.parse(localStorage.getItem('clickerSave'));
+  if (saved) {
+    score = saved.score ?? 0;
+    increment = saved.increment ?? 1;
+    autoClickers = saved.autoClickers ?? 0;
+    reberth = saved.reberth ?? 0;
+    autoClickerCost = saved.autoClickerCost ?? 25;
+    reberthCost = saved.reberthCost ?? 100;
+    upgradeCost = saved.upgradeCost ?? 10;
+    upgradeCost1 = saved.upgradeCost1 ?? 20;
+    upgradebutton1 = saved.upgradebutton1 ?? 0;
+    upgradebutton2 = saved.upgradebutton2 ?? 0;
+    updateDisplay();
+  }
+};
+
+// Save progress
+function saveProgress() {
+  localStorage.setItem('clickerSave', JSON.stringify({
+    score,
+    increment,
+    autoClickers,
+    reberth,
+    autoClickerCost,
+    reberthCost,
+    upgradeCost,
+    upgradeCost1,
+    upgradebutton1,
+    upgradebutton2
+  }));
+}
+
+// Save on every update
+function updateDisplay() {
+  scoreDisplay.textContent = score;
+  autoDisplay.textContent = autoClickers;
+  upgradeCostSpan.textContent = upgradeCost;
+  upgradeCost1Span.textContent = upgradeCost1;
+  autoClickerCostSpan.textContent = autoClickerCost;
+  reberthCostSpan.textContent = reberthCost;
+  document.getElementById('reberth').textContent = reberth; // update reberth counter
+  saveProgress();
+}
+  </script>
+  <p>© 2025 Sam Marsh | <a href="https://github.com/semarsh">GitHub  </a>|<a href="https://www.linkedin.com/in/samuel-marsh-38a33424b/">  LinkedIn</a></p><br>
+</body>
+</html>
